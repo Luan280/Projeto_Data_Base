@@ -14,7 +14,7 @@ def entrada_cadastro():
         msg_confirmacao.pack()
     else:
         msg_confirmacao = customtkinter.CTkLabel(janela, textvariable=text_usado)
-        msg_confirmacao.pack()
+        msg_confirmacao.pack()kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
 
 def trocar_texto(mensagem):
     mensagem.place(x=2000, y=2000)
