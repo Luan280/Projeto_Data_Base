@@ -39,16 +39,30 @@ def remover(email):
     cursor.execute(f"SELECT * FROM pessoas")
     resultado = cursor.fetchall()
     conexao.commit()
-    confirmacao = True
     for pessoa in resultado:
         if email == pessoa[2]:
             cursor.execute(f"DELETE FROM pessoas WHERE email = '{email}'")
-            print("Pessoa deletada com sucesso.")
+            confirmacao = True
+            conexao.commit()
+            cursor.close()
+            conexao.close()
+            return confirmacao
+        else:
             confirmacao = False
-            
-        if confirmacao:
-            print("Pessoa não cadastrada.")
-
     conexao.commit()
     cursor.close()
     conexao.close()
+    return confirmacao
+
+
+def consultar():
+    conexao = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='@Luan280',
+        database='projeto_db'
+    )
+    cursor = conexao.cursor()
+    cursor.execute(f"SELECT * FROM pessoas")
+    resultado = cursor.fetchall()
+    return resultado
