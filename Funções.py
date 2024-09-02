@@ -9,27 +9,26 @@ def cadastrar(nome, email):
         database='projeto_db'
     )
     cursor = conexao.cursor()
+    # Verifica se o email já foi cadastrado
     cursor.execute(F"SELECT * FROM pessoas WHERE email = '{email}'")
     resultado = cursor.fetchall()
     conexao.commit()
-    print(resultado)
-    confirmacao = True
+    encontrado = True
+    # Se o email já foi cadastrado a confirmação recebe "FALSE" e retorna a confirmação
     for pessoa in resultado:
         if pessoa[2] == email:
-            confirmacao = False
-    if confirmacao:
+            encontrado = False
+    # Se a confirmação for "True", o usuário é cadastrado.
+    if encontrado:
         cursor.execute(f"INSERT INTO pessoas (nome, email) VALUES ('{nome}', '{email}')")
-        with open("arquivo.txt", "a") as arquivo:
-            arquivo.write(f"{nome}, {email}\n")
     conexao.commit()
     cursor.close()
     conexao.close()
-    return confirmacao
+    return encontrado
 
 
 
 def remover(email):
-    global confirmacao
     conexao = mysql.connector.connect(
         host='localhost',
         user='root',
@@ -43,17 +42,17 @@ def remover(email):
     for pessoa in resultado:
         if email == pessoa[2]:
             cursor.execute(f"DELETE FROM pessoas WHERE email = '{email}'")
-            confirmacao = True
+            encontrado = True
             conexao.commit()
             cursor.close()
             conexao.close()
-            return confirmacao
+            return encontrado
         else:
-            confirmacao = False
+            encontrado = False
     conexao.commit()
     cursor.close()
     conexao.close()
-    return confirmacao
+    return encontrado
 
 
 def consultar():
@@ -65,9 +64,14 @@ def consultar():
     )
     cursor = conexao.cursor()
     cursor.execute(f"SELECT * FROM pessoas")
-    conexao.commit()
     resultado = cursor.fetchall()
+    conexao.commit()
+    with open("arquivo.txt", "w"):
+        pass
+    for usuario in resultado:
+        with open("arquivo.txt", "a") as arquivo:
+            arquivo.write(f"ID: {usuario[0]}  NOME: {usuario[1]}  EMAIL: {usuario[2]}\n")
+            arquivo.write(' \n')
     with open("arquivo.txt", "r") as arquivo:
         conteudo = arquivo.read()
-    msg_consulta = conteudo
-    return msg_consulta
+    return conteudo
