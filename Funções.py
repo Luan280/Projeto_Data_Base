@@ -39,9 +39,11 @@ def remover(email):
     cursor.execute(f"SELECT * FROM pessoas")
     resultado = cursor.fetchall()
     conexao.commit()
+    print(resultado)
     for pessoa in resultado:
         if email == pessoa[2]:
             cursor.execute(f"DELETE FROM pessoas WHERE email = '{email}'")
+
             encontrado = True
             conexao.commit()
             cursor.close()
