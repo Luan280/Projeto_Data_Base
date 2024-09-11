@@ -73,6 +73,8 @@ def consultar():
             arquivo.write(' \n')
     with open("arquivo.txt", "r") as arquivo:
         conteudo = arquivo.read()
+    cursor.close()
+    conexao.close()
     return conteudo
 
 
@@ -84,20 +86,38 @@ def atualizar(id_usuario, nome, email):
         database='projeto_db'
     )
     cursor = conexao.cursor()
-    confirmacao = True
+    cursor.execute("SELECT * FROM pessoas")
+    banco_dados = cursor.fetchall()
+    # Se ID não foi digitado
     if id_usuario in "":
-        pass
-        # VER se o ID já foi registrado.
-    elif nome not in "":
-        cursor.execute(f"UPDATE pessoas SET email = '{nome}' WHERE id = '{id_usuario}'")
-    elif email not in "":
-        cursor.execute(f"UPDATE pessoas SET nome = '{email}' WHERE id = '{id_usuario}'")
-    elif email not in "" and nome not in "":
-        cursor.execute(f"UPDATE pessoas SET nome = '{nome}' WHERE id = '{id_usuario}'")
-        cursor.execute(f"UPDATE pessoas SET email = '{email}' WHERE id = '{id_usuario}'")
-    elif email in "" and nome in "" and id_usuario in "":
-        confirmacao = False
-    conexao.commit()
+        return 1
+    for pessoa in banco_dados:
+        if int(id_usuario) == pessoa[0]:
+            # Se Nome e E-mail estiverem vazios
+            if nome in "" and email in "":
+                return 3
+            # Só atualiza o Nome
+            elif nome not in "" and email in "":
+                cursor.execute(f"UPDATE pessoas SET nome = '{nome}' WHERE id = '{id_usuario}'")
+                conexao.commit()
+                cursor.close()
+                conexao.close()
+                return 4
+            # Só atualiza o E-mail
+            elif email not in "" and nome in "":
+                cursor.execute(f"UPDATE pessoas SET email = '{email}' WHERE id = '{id_usuario}'")
+                conexao.commit()
+                cursor.close()
+                conexao.close()
+                return 4
+            elif nome not in "" and email not in "":
+                cursor.execute(f"UPDATE pessoas SET nome = '{nome}' WHERE id = '{id_usuario}'")
+                cursor.execute(f"UPDATE pessoas SET email = '{email}' WHERE id = '{id_usuario}'")
+                conexao.commit()
+                cursor.close()
+                conexao.close()
+                return 4
+    # Se ID não está cadastrado no sistema
     cursor.close()
     conexao.close()
-    return confirmacao
+    return 2
