@@ -5,10 +5,14 @@ def cadastrar(nome, email):
     # Se a entrada nome e email estiverem vazias, retorna 1
     if nome not in "" and email not in "":
         conexao = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='@Luan280',
-            database='projeto_db'
+            host="gateway01.us-east-1.prod.aws.tidbcloud.com",
+            port=4000,
+            user="3QWZqgUJyxppQmD.root",
+            password="Hjvmn60azorSJQdb",
+            database="projeto_db",
+            ssl_ca="/etc/ssl/certs/ca-certificates.crt",
+            ssl_verify_cert=True,
+            ssl_verify_identity=True
         )
         cursor = conexao.cursor()
         # Verifica se o email já foi cadastrado
@@ -34,10 +38,14 @@ def cadastrar(nome, email):
 def remover(nome, email):
     if nome not in "" and email not in "":
         conexao = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='@Luan280',
-            database='projeto_db'
+            host="gateway01.us-east-1.prod.aws.tidbcloud.com",
+            port=4000,
+            user="3QWZqgUJyxppQmD.root",
+            password="Hjvmn60azorSJQdb",
+            database="projeto_db",
+            ssl_ca="/etc/ssl/certs/ca-certificates.crt",
+            ssl_verify_cert=True,
+            ssl_verify_identity=True
         )
         cursor = conexao.cursor()
         cursor.execute(f"SELECT * FROM pessoas")
@@ -67,10 +75,14 @@ def remover(nome, email):
 
 def consultar():
     conexao = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='@Luan280',
-        database='projeto_db'
+        host="gateway01.us-east-1.prod.aws.tidbcloud.com",
+        port=4000,
+        user="3QWZqgUJyxppQmD.root",
+        password="Hjvmn60azorSJQdb",
+        database="projeto_db",
+        ssl_ca="/etc/ssl/certs/ca-certificates.crt",
+        ssl_verify_cert=True,
+        ssl_verify_identity=True
     )
     cursor = conexao.cursor()
     cursor.execute(f"SELECT * FROM pessoas")
@@ -91,10 +103,14 @@ def consultar():
 
 def atualizar(id_usuario, nome, email):
     conexao = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='@Luan280',
-        database='projeto_db'
+        host="gateway01.us-east-1.prod.aws.tidbcloud.com",
+        port=4000,
+        user="3QWZqgUJyxppQmD.root",
+        password="Hjvmn60azorSJQdb",
+        database="projeto_db",
+        ssl_ca="/etc/ssl/certs/ca-certificates.crt",
+        ssl_verify_cert=True,
+        ssl_verify_identity=True
     )
     cursor = conexao.cursor()
     cursor.execute("SELECT * FROM pessoas")

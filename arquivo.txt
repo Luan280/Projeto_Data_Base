@@ -1,8 +1,4 @@
-ID: 90  NOME: Luan ferreira lima  EMAIL: Luanoutroteste
+ID: 1  NOME: Luan Ferreira Lima  EMAIL: LUANTESTEDB
  
-ID: 92  NOME: Luan Ferreira Lima  EMAIL: luanferreira
- 
-ID: 96  NOME: LUANTESTEUSUÀRIO  EMAIL: teste2
- 
-ID: 103  NOME: TESTE  EMAIL: TESTE
+ID: 2  NOME: Luan Ferreira Lima  EMAIL: luanferreiralima280@gmail.com
  
