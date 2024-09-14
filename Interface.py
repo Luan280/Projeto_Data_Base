@@ -1,5 +1,5 @@
-from PIL import Image
 import customtkinter
+from PIL import Image
 from Funções import *
 
 def entrada_cadastro():
