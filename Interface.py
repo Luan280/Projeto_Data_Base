@@ -3,52 +3,74 @@ import customtkinter
 from Funções import *
 
 def entrada_cadastro():
-    confirmacao = cadastrar(entrada_nome.get(), entrada_email.get())
-    if confirmacao:
-        texto_confirmacao.configure(text="EMAIl CADASTRADO COM SUCESSO!")
+    try:
+        encontrado = cadastrar(entrada_nome.get(), entrada_email.get())
+    except Exception as banco_dados:
+        texto_confirmacao.configure(text=f"ERRO: {banco_dados}", text_color="RED")
+        texto_confirmacao.place(x=150 ,y=250)
     else:
-        texto_confirmacao.configure(text="EMAIL JÁ UTILIZADO")
-    # Deleta o texto que está na entrada de dados
-    entrada_nome.delete(0, "end")
-    entrada_email.delete(0, 'end')
-    # Escreve um texto invisível na caixa de entrada de dados
-    entrada_nome.configure(placeholder_text="NOME")
-    entrada_email.configure(placeholder_text="E-MAIL")
+        if encontrado == 1:
+            texto_confirmacao.configure(text="*DIGITE O NOME E O EMAIL", text_color="RED")
+        elif encontrado == 2:
+            texto_confirmacao.configure(text="EMAIL JÁ UTILIZADO", text_color="#262626")
+        else:
+            texto_confirmacao.configure(text="EMAIl CADASTRADO COM SUCESSO", text_color="#262626")
+        # Deleta o texto que está na entrada de dados
+        entrada_nome.delete(0, "end")
+        entrada_email.delete(0, 'end')
 
 def entrada_deletar():
-    confirmacao = remover(entrada_email.get())
-    if confirmacao:
-        texto_confirmacao.configure(text="USUÁRIO REMOVIDO COM SUCESSO!")
+    try:
+        confirmacao = remover(entrada_nome.get(), entrada_email.get())
+    except ValueError:
+        texto_confirmacao.configure(text="DIGITE O E-MAIL OU ID DO USUÁRIO")
+    except Exception as banco_dados:
+        texto_confirmacao.configure(text=f"ERRO: {banco_dados}", text_color="RED")
+        texto_confirmacao.place(x=150 ,y=250)
     else:
-        texto_confirmacao.configure(text="USUÁRIO NÃO CADASTRADO")
-    # Deleta o texto que está na entrada de dados
-    entrada_nome.delete(0, "end")
-    entrada_email.delete(0, "end")
-    # Escreve um texto invisível na caixa de entrada de dados
-    entrada_nome.configure(placeholder_text="NOME")
-    entrada_email.configure(placeholder_text="E-MAIL")
+        if confirmacao == 1:
+            texto_confirmacao.configure(text="*DIGITE O EMAIL OU ID DO USUÁRIO", text_color="RED")
+        elif confirmacao:
+            texto_confirmacao.configure(text="USUÁRIO REMOVIDO COM SUCESSO!")
+        else:
+            texto_confirmacao.configure(text="USUÁRIO NÃO CADASTRADO")
+        # Deleta o texto que está na entrada de dados
+        entrada_nome.delete(0, "end")
+        entrada_email.delete(0, "end")
 
 
 def entrada_consultar():
-    conteudo = consultar()
-    texto_consulta.configure(text=conteudo)
-    frame_consulta.place(x=50, y=25)
+    try:
+        conteudo = consultar()
+    except Exception as banco_dados:
+        texto_confirmacao.configure(text=f"ERRO: {banco_dados}", text_color="RED")
+        texto_confirmacao.place(x=150 ,y=250)
+    else:
+        texto_consulta.configure(text=conteudo)
+        frame_consulta.place(x=50, y=25)
 
 def entrada_frame_atualizar():
     frame_atualizar.place(x=50, y=25)
 
 
 def entrada_atualizar():
-    confirmacao = atualizar(id_atualizar.get(), nome_atualizar.get(), email_atualizar.get())
-    if confirmacao == 1:
-        texto_confirmacao_atualizar.configure(text="DIGITAR O ID É OBRIGATÓRIO")
-    elif confirmacao == 2:
-        texto_confirmacao_atualizar.configure(text="ID NÃO ESTÁ CADASTRADO NO SISTEMA")
-    elif confirmacao == 3:
-        texto_confirmacao_atualizar.configure(text="NOME E E-MAIL NÃO FORAM DIGITADOS")
-    elif confirmacao == 4:
-        texto_confirmacao_atualizar.configure(text="DADOS ATUALIZADOS COM SUCESSO ")
-
+    try:
+        confirmacao = atualizar(id_atualizar.get(), nome_atualizar.get(), email_atualizar.get())
+    except Exception as banco_dados:
+        texto_confirmacao_atualizar.configure(text=f"ERRO: {banco_dados}", text_color="RED")
+        texto_confirmacao_atualizar.place(x=80, y=200)
+    else:
+        if confirmacao == 1:
+            texto_confirmacao_atualizar.configure(text="DIGITAR O ID É OBRIGATÓRIO")
+        elif confirmacao == 2:
+            texto_confirmacao_atualizar.configure(text="ID NÃO ESTÁ CADASTRADO NO SISTEMA")
+        elif confirmacao == 3:
+            texto_confirmacao_atualizar.configure(text="NOME OU E-MAIL NÃO FORAM DIGITADOS")
+        elif confirmacao == 4:
+            texto_confirmacao_atualizar.configure(text="DADOS ATUALIZADOS COM SUCESSO ")
+        id_atualizar.delete(0, "end")
+        nome_atualizar.delete(0, "end")
+        email_atualizar.delete(0, "end")
 
 
 def fechar_frame():
@@ -125,7 +147,7 @@ texto_principal.place(x=370 ,y=100)
 
 # Texto que valida se o usuário foi cadastrado e se o email já está cadastrado
 texto_confirmacao = customtkinter.CTkLabel(frame_principal, text=resposta, font=('arial', 30), text_color="#262626")
-texto_confirmacao.place(x=160 ,y=250)
+texto_confirmacao.place(x=280 ,y=250)
 
 texto_usuario = customtkinter.CTkLabel(frame_principal, text="USUÁRIO:", text_color="#67735C", font=("arial", 40))
 texto_usuario.place(x=280 ,y=350)
@@ -168,11 +190,11 @@ texto_principal_atualizar = customtkinter.CTkLabel(frame_atualizar, text="ATUALI
 texto_principal_atualizar.place(x=100, y=100)
 
 # Texto que valida se os dados foram alterados com sucesso
-texto_confirmacao_atualizar = customtkinter.CTkLabel(frame_atualizar, text=resposta, font=('arial', 30), text_color="#262626")
-texto_confirmacao_atualizar.place(x=100 ,y=200)
+texto_confirmacao_atualizar = customtkinter.CTkLabel(frame_atualizar, text=resposta, font=('arial', 25), text_color="RED")
+texto_confirmacao_atualizar.place(x=120 ,y=200)
 
-texto_obrigatorio_atualizar = customtkinter.CTkLabel(frame_atualizar, text="*ID OBRIGATÓRIO", font=('arial', 10), text_color="RED")
-texto_obrigatorio_atualizar.place(x=100 ,y=250)
+texto_obrigatorio_atualizar = customtkinter.CTkLabel(frame_atualizar, text="*ID OBRIGATÓRIO", font=('arial', 10),text_color="RED")
+texto_obrigatorio_atualizar.place(x=115 ,y=270)
 
 # Botão que fecha o frame que atualiza dados
 botao_fechar_atualizar = customtkinter.CTkButton(frame_atualizar, image=icone_fechar, command=fechar_frame_atualizar, text="",

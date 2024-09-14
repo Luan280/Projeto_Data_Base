@@ -2,57 +2,68 @@ import mysql.connector
 
 
 def cadastrar(nome, email):
-    conexao = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='@Luan280',
-        database='projeto_db'
-    )
-    cursor = conexao.cursor()
-    # Verifica se o email já foi cadastrado
-    cursor.execute(F"SELECT * FROM pessoas WHERE email = '{email}'")
-    resultado = cursor.fetchall()
-    conexao.commit()
-    encontrado = True
-    # Se o email já foi cadastrado a confirmação recebe "FALSE" e retorna a confirmação
-    for pessoa in resultado:
-        if pessoa[2] == email:
-            encontrado = False
-    # Se a confirmação for "True", o usuário é cadastrado.
-    if encontrado:
-        cursor.execute(f"INSERT INTO pessoas (nome, email) VALUES ('{nome}', '{email}')")
-    conexao.commit()
-    cursor.close()
-    conexao.close()
-    return encontrado
+    # Se a entrada nome e email estiverem vazias, retorna 1
+    if nome not in "" and email not in "":
+        conexao = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password='@Luan280',
+            database='projeto_db'
+        )
+        cursor = conexao.cursor()
+        # Verifica se o email já foi cadastrado
+        cursor.execute(F"SELECT * FROM pessoas WHERE email = '{email}'")
+        resultado = cursor.fetchall()
+        conexao.commit()
+        encontrado = False
+        # Se o email já foi cadastrado a confirmação recebe "2"
+        for pessoa in resultado:
+            if pessoa[2] in email:
+                encontrado = 2
+        # Se a confirmação for "False", o usuário é cadastrado.
+        if not encontrado:
+            cursor.execute(f"INSERT INTO pessoas (nome, email) VALUES ('{nome}', '{email}')")
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+        return encontrado
+    else:
+        return 1
 
 
-def remover(email):
-    conexao = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='@Luan280',
-        database='projeto_db'
-    )
-    cursor = conexao.cursor()
-    cursor.execute(f"SELECT * FROM pessoas")
-    resultado = cursor.fetchall()
-    conexao.commit()
-    encontrado = True
-    for pessoa in resultado:
-        if email == pessoa[2]:
-            cursor.execute(f"DELETE FROM pessoas WHERE email = '{email}'")
-            conexao.commit()
-            cursor.close()
-            conexao.close()
-            return encontrado
-        else:
-            encontrado = False
-    conexao.commit()
-    cursor.close()
-    conexao.close()
-    return encontrado
-
+def remover(nome, email):
+    if nome not in "" and email not in "":
+        conexao = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password='@Luan280',
+            database='projeto_db'
+        )
+        cursor = conexao.cursor()
+        cursor.execute(f"SELECT * FROM pessoas")
+        resultado = cursor.fetchall()
+        conexao.commit()
+        encontrado = True
+        for pessoa in resultado:
+            if nome in pessoa[2]:
+                cursor.execute(f"DELETE FROM pessoas WHERE email = '{nome}'")
+                conexao.commit()
+            elif int(nome) == pessoa[0]:
+                cursor.execute(f"DELETE FROM pessoas WHERE id = '{nome}'")
+                conexao.commit()
+            elif email in pessoa[2]:
+                cursor.execute(f"DELETE FROM pessoas WHERE email = '{email}'")
+                conexao.commit()
+            elif int(email) == pessoa[0]:
+                cursor.execute(f"DELETE FROM pessoas WHERE id = '{email}'")
+                conexao.commit()
+            else:
+                encontrado = False
+        cursor.close()
+        conexao.close()
+        return encontrado
+    else:
+        return 1
 
 def consultar():
     conexao = mysql.connector.connect(
